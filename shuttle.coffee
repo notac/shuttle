@@ -19,12 +19,19 @@ writer = new class extends stream.Writable
     console.log 'Initializing upload...'
     @s3.upload({Key: prefix+file, Body: fs.createReadStream(path+file) })
       .send (err, data) ->
+        console.log 'Upload complete.'
+
         if err
           console.log "Couldn't upload: " + prefix+file + " " + err.message
-        console.log 'Upload complete.'
+          if done
+            done()
+        else
+          fs.unlink path+file, (err) ->
+            if err
+              console.log "Couldn't remove log: " + err.message
+            if done
+              done()
         
-        if done
-          done()
 
 if process.argv.length < 4
   console.log 'Missing path and prefix parameters'
