@@ -1,11 +1,12 @@
 fs = require 'fs'
 stream = require 'stream'
 
+argv = require('minimist')(process.argv.slice(3))
 bucket = 'location-shuttle'
-prefix = 'raw/'
+prefix = argv['s3-prefix']
 
-path = process.argv[2]
-search_prefix = process.argv[3]
+path = argv['path']
+search_prefix = argv['search']
 
 writer = new class extends stream.Writable
   constructor: (options) ->
